@@ -2,6 +2,8 @@
 
 
 
+
+
 function Popup (args) {
 
   var args = args || {};
@@ -139,10 +141,15 @@ function Popup (args) {
 
     for (var i = 0; i < this.fields.length; i++) {
 
+      var f = this.fields[i];
       var v = {};
-      v.id = this.fields[i].id;
-      v.label = this.fields[i].label;
-      v.value = $("#" + this.fields[i].id).val();
+      v.label = f.label;
+      v.id = f.id;
+      v.label = f.label;
+      v.value = $("#" + f.id).val();
+
+      if (f.type == "radio" || f.type == "checkbox") { v.value = document.getElementById(f.id).checked }
+
       data.push(v);
 
     }
@@ -152,7 +159,7 @@ function Popup (args) {
   }
 
 
-
+  /*
   this.submit = function () {
 
     if (!this.callback) { return false; }
@@ -172,7 +179,7 @@ function Popup (args) {
     window[this.callback](vars);
 
   }
-
+  */
 
 
   // ******** fields
@@ -190,12 +197,17 @@ function Popup (args) {
 
     var args = args || {};
     this.parentID = args.parentID;
-    this.id = args.id || this.parentID + "-Field-" + Math.round(Math.random() * 1000000);
     this.label = args.label || "My Field";
-    this.value = args.value || 0;
-    this.type = args.type || false;
+    this.value = args.value || '';
+    this.type = args.type || "text";
     this.min = args.min || false;
     this.max = args.max || false;
+
+    if (typeof(args.id) === "undefined") {
+      this.id = this.parentID + "-Field-" + Math.round(Math.random() * 1000000);
+    } else {
+      this.id = this.parentID + "-" + args.id;
+    }
 
     this.createElement = function () {
 
@@ -214,7 +226,9 @@ function Popup (args) {
 
       thisInput.style.setProperty("font-size", "12px");
       thisInput.style.setProperty("margin-bottom", "4px");
-      if (this.type != "number") { thisInput.style.setProperty("width", "96%"); }
+
+      var fullWidthElements = ["text", "range", "password", "search"];
+      if (fullWidthElements.indexOf(this.type) >= 0) { thisInput.style.setProperty("width", "96%"); }
 
       thisInput.value = this.value;
       if (this.type) { thisInput.type = this.type; }
