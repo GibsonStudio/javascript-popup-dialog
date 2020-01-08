@@ -70,8 +70,6 @@ function openPopupTwo ()
 function popupSubmit (args)
 {
 
-  console.log("SUBMIT");
-  var args = args || {};
   console.dir(args);
   p.close();
 
@@ -80,7 +78,6 @@ function popupSubmit (args)
 
 function popupTwoSubmit (args)
 {
-  console.log("Popup TWO");
   console.dir(args);
 }
 

@@ -1,6 +1,14 @@
 
 
+// Javascript Popup Forms
+// Jon Williams
+// January 2020
 
+
+// Buttons:
+// If no butttons are specified, ther default Submit and Cancel buttons are added
+// type="submit", default callback = "popupSubmit"
+// type="cancel", default action is to close the popup, popup.close();
 
 
 
@@ -22,17 +30,9 @@ function Popup (args) {
       this.addButton({ type:"cancel" });
     }
 
-    if (document.getElementById(this.id)) {
-
-      $("#" + this.id + "-modal").show();
-      $("#" + this.id).show();
-
-    } else {
-
-      var el = this.createElement();
-      document.body.appendChild(el);
-
-    }
+    if (document.getElementById(this.id)) { this.close(); }
+    var el = this.createElement();
+    document.body.appendChild(el);
 
   }
 
@@ -60,6 +60,7 @@ function Popup (args) {
     var el = document.createElement("div");
     el.id = this.id;
 
+    el.style.setProperty("font-family", "Arial");
     el.style.setProperty("width", "300px");
     el.style.setProperty("padding", "10px");
     el.style.setProperty("position", "absolute");
@@ -146,7 +147,7 @@ function Popup (args) {
       v.label = f.label;
       v.id = f.id;
       v.label = f.label;
-      v.value = $("#" + f.id).val();
+      v.value = document.getElementById(f.id).value;
 
       if (f.type == "radio" || f.type == "checkbox") { v.value = document.getElementById(f.id).checked }
 
@@ -159,27 +160,7 @@ function Popup (args) {
   }
 
 
-  /*
-  this.submit = function () {
 
-    if (!this.callback) { return false; }
-
-    var vars = [];
-
-    for (var i = 0; i < this.fields.length; i++) {
-
-      var v = {};
-      v.id = this.fields[i].id;
-      v.label = this.fields[i].label;
-      v.value = $("#" + this.fields[i].id).val();
-      vars.push(v);
-
-    }
-
-    window[this.callback](vars);
-
-  }
-  */
 
 
   // ******** fields
