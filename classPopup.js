@@ -1,12 +1,13 @@
 
 
 
-//TODO use popup ID in callback names
 
 function Popup (args) {
 
   var args = args || {};
   this.id = args.id || "popup-" + Math.round(Math.random() * 100000);
+  this.title = args.title || "";
+  this.text = args.text || "";
   this.fields = args.fields || [];
   this.buttons = args.buttons || [];
   this.callback = args.callback || false;
@@ -27,7 +28,6 @@ function Popup (args) {
     } else {
 
       var el = this.createElement();
-      //document.getElementById("my-container").appendChild(el);
       document.body.appendChild(el);
 
     }
@@ -40,22 +40,66 @@ function Popup (args) {
 
     // modal div
     var e = document.createElement("div");
-    e.style = "width:100%; height:100%; background-color:#66666633; position:fixed; left:0; top:0; z-index:1;";
-    e.id = this.id + "-modal";
-    document.body.appendChild(e);
 
+    e.style.setProperty("width", "100%");
+    e.style.setProperty("height", "100%");
+    e.style.setProperty("background-color", "rgba(51,51,51,0.5)");
+    e.style.setProperty("position", "fixed");
+    e.style.setProperty("left", "0");
+    e.style.setProperty("top", "0");
+    e.style.setProperty("z-index", "1");
+
+    e.id = this.id + "-modal";
+    var myThis = this;
+    e.onclick = function () { myThis.close(); };
+    document.body.appendChild(e);
 
     // dialog
     var el = document.createElement("div");
     el.id = this.id;
-    var s = 'width:300px;';
-    s += 'position:fixed;left:100px;top:100px;';
-    s += 'background-color:#f9423a; z-index:9999;';
-    el.style = s;
+
+    el.style.setProperty("width", "300px");
+    el.style.setProperty("padding", "10px");
+    el.style.setProperty("position", "absolute");
+    el.style.setProperty("left", "50%");
+    el.style.setProperty("top", "100px");
+    el.style.setProperty("margin-left", "-150px");
+    el.style.setProperty("border-radius", "4px");
+    el.style.setProperty("background-color", "#fffff6");
+    el.style.setProperty("color", "#666666");
+    el.style.setProperty("z-index", "9999");
+
+    // add title
+    if (this.title) {
+
+      var titleContainer = document.createElement("div");
+
+      titleContainer.style.setProperty("font-size", "14px");
+      titleContainer.style.setProperty("font-weight", "bold");
+      titleContainer.style.setProperty("margin-bottom", "10px");
+
+      titleContainer.innerHTML = this.title;
+      el.appendChild(titleContainer);
+
+    }
+
+    // add text?
+    if (this.text) {
+
+      var textContainer = document.createElement("div");
+
+      textContainer.style.setProperty("font-size", "12px");
+      textContainer.style.setProperty("margin-bottom", "20px");
+
+      textContainer.innerHTML = this.text;
+      el.appendChild(textContainer);
+
+    }
+
 
     // add fields
     var fieldContainer = document.createElement("div");
-    fieldContainer.style = "background-color:#005eb8;";
+    fieldContainer.style = "";
 
     for (var i = 0; i < this.fields.length; i++) {
       var f = this.fields[i].createElement();
@@ -67,7 +111,7 @@ function Popup (args) {
 
     // add buttons
     var buContainer = document.createElement("div");
-    buContainer.style = "background-color:#aaffcc;";
+    buContainer.style.setProperty("margin-top", "20px");
 
     for (var i = 0; i < this.buttons.length; i++) {
       var b = this.buttons[i].createElement();
@@ -81,21 +125,11 @@ function Popup (args) {
   }
 
 
-
-  //this.clickedMe = function () {
-  //  console.log("CLICKED ME");
-  //}
-
-
-  this.cancelOLD = function () {
-    $("#" + this.id + "-modal").hide();
-    $("#" + this.id).hide();
-  }
-
-
   this.close = function () {
-    document.getElementById(this.id + "-modal").remove();
-    document.getElementById(this.id).remove();
+    var m = document.getElementById(this.id + "-modal");
+    var d = document.getElementById(this.id);
+    document.body.removeChild(m);
+    document.body.removeChild(d);
   }
 
 
@@ -166,13 +200,22 @@ function Popup (args) {
     this.createElement = function () {
 
       var thisContainer = document.createElement("div");
-      thisContainer.style = "margin-bottom:4px;";
+      thisContainer.style.setProperty("margin-bottom", "4px");
+
       var thisLabel = document.createElement("div");
-      thisLabel.style = "width:30%; background-color:#f9f9f9; font-size:11px; display:inline-block;";
+
+      thisLabel.style.setProperty("font-size", "11px");
+      thisLabel.style.setProperty("font-weight", "bold");
+
       thisLabel.innerHTML = this.label;
       thisContainer.appendChild(thisLabel);
+
       var thisInput = document.createElement("input");
-      thisInput.style = "font-size:11px; width:65%; display:inline-block;";
+
+      thisInput.style.setProperty("font-size", "12px");
+      thisInput.style.setProperty("margin-bottom", "4px");
+      if (this.type != "number") { thisInput.style.setProperty("width", "96%"); }
+
       thisInput.value = this.value;
       if (this.type) { thisInput.type = this.type; }
       if (this.min) { thisInput.min = this.min; }
@@ -221,6 +264,15 @@ function Popup (args) {
     this.createElement = function () {
 
       var el = document.createElement("button");
+
+      el.style.setProperty("border", "none");
+      el.style.setProperty("color", "666666");
+      el.style.setProperty("background-color", "#d4d4d4");
+      el.style.setProperty("font-size", "12px");
+      el.style.setProperty("padding", "4px");
+      el.style.setProperty("margin", "2px");
+      el.style.setProperty("cursor", "pointer");
+
       var myThis = this;
       el.innerHTML = this.text;
       el.onclick = function () { myThis.buttonClicked(); };
@@ -240,39 +292,3 @@ function Popup (args) {
 
 
 }
-
-
-/*
-function Button (args) {
-
-  var args = args || {};
-  this.text = args.text || "Cancel";
-  this.action = args.action || 'p.close()';
-
-  this.HTML = function () {
-
-    var html = '<button onclick="' + this.action + '">' + this.text + '</button>';
-    return html;
-
-  }
-
-
-  this.createElement = function () {
-
-    var el = document.createElement("button");
-    var myThis = this;
-    el.innerHTML = this.text;
-    el.onclick = function () { myThis.buttonClicked(); };
-    return el;
-
-  }
-
-
-  this.buttonClicked = function () {
-    eval(this.action);
-  }
-
-
-
-}
-*/

@@ -30,7 +30,8 @@ function init ()
 function openPopupOne ()
 {
 
-  p = new Popup();
+  p = new Popup({ title:"Personal Details" });
+  p.text = "Please enter your details:<br /><br />(be honest)";
   p.addField({ label:"Firstname", id:"firstname", value:"Jon" });
   p.addField({ label:"Lastname", id:"lastname", value:"Williams" });
   p.addField({ label:"Age", id:"age", type:"number", value:45, min:40, max:50 });
@@ -43,7 +44,7 @@ function openPopupOne ()
 function openPopupTwo ()
 {
 
-  p = new Popup();
+  p = new Popup({ title:"Guitar:" });
   p.addField({ label:"Make", id:"make", value:"Gibson" });
   p.addField({ label:"Model", id:"model", value:"Les Paul" });
   p.addField({ label:"Year Bought", id:"yearbought", type:"number", value:2010, min:1990, max:2030 });
