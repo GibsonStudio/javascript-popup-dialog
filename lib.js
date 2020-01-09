@@ -19,10 +19,10 @@ function testCallback ()
 function openPopupOne ()
 {
 
-  p = new Popup({ title:"Personal Details", closeOnSubmit:false, callback:"testCallback" });
+  p = new Popup({ title:"Personal Details" });
   p.text = "Please enter your details:<br /><br />(be honest)";
 
-  p.addField({ label:"Some Text", type:"textarea" });
+  p.addField({ label:"Some Text", id:"myText", type:"textarea" });
   p.addField({ label:"Radio Test", id:"radio", type:"radio" });
   p.addField({ label:"Checkbox Test", id:"checkbox", type:"checkbox" });
   //p.addField({ label:"Date Test", id:"date", type:"date" });

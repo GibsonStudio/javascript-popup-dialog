@@ -1,7 +1,10 @@
 
+
+
 // Javascript Popup Forms
 // Jon Williams
 // January 2020
+// v1.1
 
 
 // Buttons:
@@ -25,6 +28,7 @@ function Popup (args) {
   this.buttons = args.buttons || [];
   this.callback = args.callback || "popupSubmit";
   this.closeOnSubmit = (typeof(args.closeOnSubmit) === "undefined") ? true : args.closeOnSubmit;
+  this.width = args.width || "340px";
 
 
   this.show = function () {
@@ -74,7 +78,7 @@ function Popup (args) {
     el.id = this.id;
 
     el.style.setProperty("font-family", "Arial");
-    el.style.setProperty("width", "300px");
+    el.style.setProperty("width", this.width);
     el.style.setProperty("padding", "10px");
     el.style.setProperty("position", "absolute");
     el.style.setProperty("left", "50%");
@@ -175,13 +179,26 @@ function Popup (args) {
 
 
 
+  this.setFieldValue = function (fieldID, fieldValue)
+  {
+
+    for (var i = 0; i < this.fields.length; i++) {
+
+      if (this.fields[i].id == fieldID) {
+        this.fields[i].value = fieldValue;
+        break;
+      }
+    }
+
+  }
+
+
 
   // ******** fields
 
   this.addField = function (args) {
 
     var args = args || {};
-    args.parentID = this.id;
     var f = new this.Field(args);
     this.fields.push(f);
 
@@ -190,7 +207,6 @@ function Popup (args) {
   this.Field = function (args) {
 
     var args = args || {};
-    this.parentID = args.parentID;
     this.label = args.label || "My Field";
     this.value = args.value || '';
     this.type = args.type || "text";
@@ -198,9 +214,9 @@ function Popup (args) {
     this.max = args.max || false;
 
     if (typeof(args.id) === "undefined") {
-      this.id = this.parentID + "-Field-" + Math.round(Math.random() * 1000000);
+      this.id = "Field-" + Math.round(Math.random() * 1000000);
     } else {
-      this.id = this.parentID + "-" + args.id;
+      this.id = args.id;
     }
 
     this.createElement = function () {
