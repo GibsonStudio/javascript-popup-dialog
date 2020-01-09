@@ -1,5 +1,4 @@
 
-
 // Javascript Popup Forms
 // Jon Williams
 // January 2020
@@ -7,8 +6,12 @@
 
 // Buttons:
 // If no butttons are specified, ther default Submit and Cancel buttons are added
-// type="submit", default callback = "popupSubmit"
-// type="cancel", default action is to close the popup, popup.close();
+// type="submit", default callback = Popup.submit()
+// type="cancel", default action is to close the popup, Popup.close();
+
+
+// Internet Explorer
+// input types data, color, and time are not supported
 
 
 
@@ -20,7 +23,8 @@ function Popup (args) {
   this.text = args.text || "";
   this.fields = args.fields || [];
   this.buttons = args.buttons || [];
-  this.callback = args.callback || false;
+  this.callback = args.callback || "popupSubmit";
+  this.closeOnSubmit = (typeof(args.closeOnSubmit) === "undefined") ? true : args.closeOnSubmit;
 
 
   this.show = function () {
@@ -33,6 +37,15 @@ function Popup (args) {
     if (document.getElementById(this.id)) { this.close(); }
     var el = this.createElement();
     document.body.appendChild(el);
+
+  }
+
+
+
+  this.submit = function () {
+
+    window[this.callback](this.getData());
+    if (this.closeOnSubmit) { this.close(); }
 
   }
 
@@ -203,12 +216,17 @@ function Popup (args) {
       thisLabel.innerHTML = this.label;
       thisContainer.appendChild(thisLabel);
 
-      var thisInput = document.createElement("input");
+      if (this.type == "textarea") {
+        var thisInput = document.createElement("textarea");
+        thisInput.style.setProperty("height", "60px");
+      } else {
+        var thisInput = document.createElement("input");
+      }
 
       thisInput.style.setProperty("font-size", "12px");
       thisInput.style.setProperty("margin-bottom", "4px");
 
-      var fullWidthElements = ["text", "range", "password", "search"];
+      var fullWidthElements = ["text", "range", "password", "search", "textarea"];
       if (fullWidthElements.indexOf(this.type) >= 0) { thisInput.style.setProperty("width", "96%"); }
 
       thisInput.value = this.value;
@@ -248,7 +266,7 @@ function Popup (args) {
 
     if (this.type == "submit") {
       if (!this.text) { this.text = "Submit"; }
-      if (!this.callback) { this.callback = "popupSubmit"; }
+      if (!this.callback) { this.callback = "submit"; }
     }
 
     if (this.type == "cancel") {
@@ -279,7 +297,12 @@ function Popup (args) {
     this.buttonClicked = function () {
 
       if (this.callback == "close") { this.parent.close(); }
-      else { window[this.callback](this.parent.getData()); }
+      else if (this.callback == "submit") {
+        this.parent.submit();
+      } else {
+        window[this.callback](this.parent.getData());
+        if (this.parent.closeOnSubmit) { this.parent.close(); }
+      }
 
     }
 
