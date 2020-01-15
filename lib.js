@@ -22,13 +22,13 @@ function openPopupOne ()
   p = new Popup({ title:"Personal Details" });
   p.text = "Please enter your details:<br /><br />(be honest)";
 
-  p.addField({ label:"Some Text", id:"myText", type:"textarea" });
+  p.addField({ label:"Some Text", id:"textarea", type:"textarea" });
   p.addField({ label:"Radio Test", id:"radio", type:"radio" });
   p.addField({ label:"Checkbox Test", id:"checkbox", type:"checkbox" });
   //p.addField({ label:"Date Test", id:"date", type:"date" });
   //p.addField({ label:"Color Test", id:"color", type:"color" });
   p.addField({ label:"Password Test",  type:"password" });
-  p.addField({ label:"Range Test", type:"range", min:0, max:100, value:20 });
+  p.addField({ label:"Range Test", id:"range", type:"range", min:0, max:100, value:20 });
   p.addField({ label:"Search Test", type:"search" });
   //p.addField({ label:"Time Test", type:"time" });
 

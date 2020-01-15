@@ -4,8 +4,9 @@
 // Javascript Popup Forms
 // Jon Williams
 // January 2020
-// v1.1
-
+// v1.2: 10/1/2020
+// v1.3 15/1/2020 - added height to field args
+// v1.3 15/1/2020 - allowed zero values for value, min and max
 
 // Buttons:
 // If no butttons are specified, ther default Submit and Cancel buttons are added
@@ -179,13 +180,31 @@ function Popup (args) {
 
 
 
+
   this.setFieldValue = function (fieldID, fieldValue)
   {
 
     for (var i = 0; i < this.fields.length; i++) {
 
       if (this.fields[i].id == fieldID) {
+
         this.fields[i].value = fieldValue;
+        var el = document.getElementById(fieldID);
+
+        if (this.fields[i].type == "radio" || this.fields[i].type == "checkbox") {
+
+          try {
+            el.checked = fieldValue;
+          } catch (err) {}
+
+        } else {
+
+          try {
+            el.value = fieldValue;
+          } catch (err) {}
+
+        }
+
         break;
       }
     }
@@ -208,10 +227,11 @@ function Popup (args) {
 
     var args = args || {};
     this.label = args.label || "My Field";
-    this.value = args.value || '';
+    this.value = typeof(args.value) === "undefined" ? '' : args.value;
     this.type = args.type || "text";
-    this.min = args.min || false;
-    this.max = args.max || false;
+    this.min = typeof(args.min) === "undefined" ? '' : args.min;
+    this.max = typeof(args.max) === "undefined" ? '' : args.max;
+    this.height = args.height || false;
 
     if (typeof(args.id) === "undefined") {
       this.id = "Field-" + Math.round(Math.random() * 1000000);
@@ -234,7 +254,11 @@ function Popup (args) {
 
       if (this.type == "textarea") {
         var thisInput = document.createElement("textarea");
-        thisInput.style.setProperty("height", "60px");
+        if (this.height) {
+          thisInput.style.setProperty("height", this.height);
+        } else {
+          thisInput.style.setProperty("height", "60px");
+        }
       } else {
         var thisInput = document.createElement("input");
       }
